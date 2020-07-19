@@ -1,58 +1,59 @@
 package linkedInnAuto.service;
 
-import linkedInnAuto.constants.CSSSelectors;
-import linkedInnAuto.setup.PropertiesHelper;
-import linkedInnAuto.setup.WebDriverSetup;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.WebDriverRunner;
+import linkedInnAuto.page.PageObject;
+import linkedInnAuto.service.filters.SearchFilter;
+import org.openqa.selenium.NoSuchElementException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ContactsService {
-    private static final String LINKED_INN_LOGIN_PAGE = "https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin";
-    private static final String LOGIN = "login";
-    private static final String PASSWORD = "password";
-    private WebDriver webDriver;
+    private static final Logger LOG = LoggerFactory.getLogger(ContactsService.class);
     @Autowired
-    private WebDriverSetup webDriverSetup;
+    PageObject pageObject;
     @Autowired
-    private PropertiesHelper propertiesHelper;
+    SearchFilter searchFilter;
+    @Autowired
+    ConfigurableApplicationContext context;
 
 
-    private ContactsService login() {
-        webDriver = webDriverSetup.createWebDriver();
-        webDriver.get( LINKED_INN_LOGIN_PAGE );
-        typeLogin( propertiesHelper.getProperty( LOGIN ) );
-        typePassword( propertiesHelper.getProperty( PASSWORD ) );
-        clickSignIn();
-        return this;
+    public void findNewContactsByCompany( String companyName ) {
+        try {
+            pageObject.login();
+            searchEmployeesByCriteria( companyName );
+            pageObject.clickPeopleOnlyInSearchResults();
+        } catch ( Exception e ){
+            LOG.error( "Selenium error. Will init application shutdown", e );
+            WebDriverRunner.closeWindow();
+            WebDriverRunner.closeWebDriver();
+            context.close();
+        }
     }
 
-    public void addNewContactsByCompany( String companyName ) {
-        login();
+    private void searchEmployeesByCriteria( String criteria ) {
+        try{
+            pageObject.typeCriteriaInSearch( criteria );
+        } catch ( Exception e ){
+            LOG.error( "Selenium error. Will init application shutdown", e );
+            WebDriverRunner.closeWindow();
+            WebDriverRunner.closeWebDriver();
+            context.close();
+        }
     }
 
-    private void typeLogin( String login ) {
-        WebDriverWait wait = new WebDriverWait( webDriver, 5 );
-        wait.until( ExpectedConditions.visibilityOf( webDriver.findElement( CSSSelectors.getLoginSelector() ) ) );
-        webDriver.findElement( CSSSelectors.getLoginSelector() ).clear();
-        webDriver.findElement( CSSSelectors.getLoginSelector() ).sendKeys( login );
+    public void addAreaToFilters( String area ) {
+        try{
+            searchFilter.addAreaToFilters(area);
+        }catch ( NoSuchElementException e ){
+            LOG.error( "Selenium error. Will init application shutdown", e );
+            WebDriverRunner.closeWindow();
+            WebDriverRunner.closeWebDriver();
+            context.close();
+        }
     }
-
-    private void typePassword( String password ) {
-        WebDriverWait wait = new WebDriverWait( webDriver, 5 );
-        wait.until( ExpectedConditions.visibilityOf( webDriver.findElement( CSSSelectors.getPasswordSelector() ) ) );
-        webDriver.findElement( CSSSelectors.getPasswordSelector() ).clear();
-        webDriver.findElement( CSSSelectors.getPasswordSelector() ).sendKeys( password );
-    }
-
-    private void clickSignIn(){
-        WebDriverWait wait = new WebDriverWait( webDriver, 5 );
-        wait.until( ExpectedConditions.visibilityOf( webDriver.findElement( CSSSelectors.getSignInButton() ) ) );
-        webDriver.findElement( CSSSelectors.getSignInButton() ).click();
-    }
-
-
 }

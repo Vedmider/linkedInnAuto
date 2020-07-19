@@ -9,12 +9,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.XADataSourceAutoConfiguration;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, XADataSourceAutoConfiguration.class})
 public class Application implements CommandLineRunner {
     private static final Logger LOG = LoggerFactory.getLogger( Application.class );
     @Autowired
     private ContactsService contactsService;
+    @Autowired
+    private ConfigurableApplicationContext context;
 
 
     public static void main( String[] args ) {
@@ -23,8 +26,10 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run( String... args ) throws Exception {
-        LOG.info( "com.Application start" );
-        contactsService.addNewContactsByCompany( "AMAZON" );
+        LOG.info( "linkedInn.Application start" );
+        contactsService.findNewContactsByCompany( "AMAZON" );
+        contactsService.addAreaToFilters( "США" );
+        contactsService.addAreaToFilters( "Канада" );
     }
 
 

@@ -1,6 +1,6 @@
 package linkedInnAuto.setup;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import com.codeborne.selenide.WebDriverRunner;
 import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -15,6 +15,8 @@ import java.util.logging.Level;
 
 @Component
 public class ChromeDriverSetup extends WebDriverSetup {
+    private WebDriver webDriver;
+
     @Override
     public WebDriver createWebDriver() {
         HashMap<String, Object> chromePrefs = new HashMap<>();
@@ -40,7 +42,9 @@ public class ChromeDriverSetup extends WebDriverSetup {
         options.setCapability( CapabilityType.LOGGING_PREFS, loggingPrefs );
         String pathToChromeDriver = downloadChromeDriver( WebDriverProperties.getVersion() );
         System.setProperty( "webdriver.chrome.driver", pathToChromeDriver );
-        return new ChromeDriver( options );
+        webDriver = new ChromeDriver( options );
+        WebDriverRunner.setWebDriver( webDriver );
+        return webDriver;
     }
 
     public static String downloadChromeDriver( String version ) {

@@ -21,6 +21,9 @@ dependencies {
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot
     implementation group: 'org.springframework.boot', name: 'spring-boot', version: '2.3.0.RELEASE'
+    // https://mvnrepository.com/artifact/com.codeborne/selenide
+    implementation group: 'com.codeborne', name: 'selenide', version: '5.12.2'
+
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
