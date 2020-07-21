@@ -1,6 +1,8 @@
 package linkedInnAuto;
 
 import linkedInnAuto.service.ContactsService;
+import linkedInnAuto.service.LinkedInnHttpService;
+import linkedInnAuto.service.filters.AreaCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,8 @@ public class Application implements CommandLineRunner {
     private ContactsService contactsService;
     @Autowired
     private ConfigurableApplicationContext context;
-
+    @Autowired
+    private LinkedInnHttpService linkedInnHttpService;
 
     public static void main( String[] args ) {
         SpringApplication.run( Application.class, args );
@@ -27,9 +30,11 @@ public class Application implements CommandLineRunner {
     @Override
     public void run( String... args ) throws Exception {
         LOG.info( "linkedInn.Application start" );
-        contactsService.findNewContactsByCompany( "AMAZON" );
-        contactsService.addAreaToFilters( "США" );
-        contactsService.addAreaToFilters( "Канада" );
+        contactsService.login();
+        linkedInnHttpService.searchPeopleByCriteria( "AMAZON" )
+                            .addAreaToFilter( AreaCode.USA )
+                            .addAreaToFilter( AreaCode.CANADA );
+
     }
 
 

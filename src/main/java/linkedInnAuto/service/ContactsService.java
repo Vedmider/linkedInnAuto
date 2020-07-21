@@ -56,4 +56,8 @@ public class ContactsService {
             context.close();
         }
     }
+
+    public void login(){
+        pageObject.login();
+    }
 }
