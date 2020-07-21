@@ -23,6 +23,10 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot', version: '2.3.0.RELEASE'
     // https://mvnrepository.com/artifact/com.codeborne/selenide
     implementation group: 'com.codeborne', name: 'selenide', version: '5.12.2'
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
