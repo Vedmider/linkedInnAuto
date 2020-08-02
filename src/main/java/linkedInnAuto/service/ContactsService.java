@@ -60,4 +60,9 @@ public class ContactsService {
     public void login(){
         pageObject.login();
     }
+
+    public ContactsService addContacts(int contactsNumber){
+        pageObject.addContactsFromSearchResultsPage( contactsNumber );
+        return this;
+    }
 }

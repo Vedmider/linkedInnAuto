@@ -34,6 +34,7 @@ public class Application implements CommandLineRunner {
         linkedInnHttpService.searchPeopleByCriteria( "AMAZON" )
                             .addAreaToFilter( AreaCode.USA )
                             .addAreaToFilter( AreaCode.CANADA );
+        contactsService.addContacts( 20 );
 
     }
 
